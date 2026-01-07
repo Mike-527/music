@@ -1,0 +1,426 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0f0c29;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 动态背景动画 */
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    z-index: -1;
+}
+
+.background-animation::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(139, 69, 255, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.container {
+    width: 90%;
+    max-width: 500px;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 播放器卡片 */
+.player-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    padding: 40px 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: cardFadeIn 0.8s ease;
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 封面和黑胶唱片 */
+.album-cover {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto 30px;
+}
+
+.vinyl-record {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+    animation: spin 3s linear infinite paused;
+}
+
+.vinyl-record::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background: repeating-radial-gradient(
+        circle at center,
+        transparent 0px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.03) 2px,
+        rgba(255, 255, 255, 0.03) 4px
+    );
+}
+
+.vinyl-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #8b45ff, #ff006e);
+    border-radius: 50%;
+    box-shadow: 0 5px 20px rgba(139, 69, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vinyl-center::before {
+    content: '';
+    width: 30px;
+    height: 30px;
+    background: #1a1a1a;
+    border-radius: 50%;
+}
+
+.vinyl-record.playing {
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 音频可视化 */
+#visualizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* 歌曲信息 */
+.song-info {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.song-title {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 10px rgba(139, 69, 255, 0.5);
+}
+
+.artist-name {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+}
+
+/* 歌词容器 */
+.lyrics-container {
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+.lyrics-container::before,
+.lyrics-container::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 50px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.lyrics-container::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+}
+
+.lyrics-container::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+}
+
+.lyrics-content {
+    text-align: center;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lyric-line {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 18px;
+    line-height: 2.5;
+    transition: all 0.5s ease;
+    padding: 5px 0;
+}
+
+.lyric-line.active {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+    text-shadow: 0 0 20px rgba(139, 69, 255, 0.8),
+                 0 0 40px rgba(255, 0, 110, 0.6);
+    transform: scale(1.1);
+}
+
+.lyric-line.past {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* 进度条 */
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.time-current,
+.time-total {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    min-width: 45px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    overflow: visible;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b45ff, #ff006e);
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 15px rgba(139, 69, 255, 0.6);
+}
+
+.progress-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(139, 69, 255, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s;
+    left: 0%;
+}
+
+.progress-bar:hover .progress-thumb {
+    opacity: 1;
+}
+
+/* 控制按钮 */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.control-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.control-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.play-btn {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #8b45ff, #ff006e);
+    box-shadow: 0 5px 25px rgba(139, 69, 255, 0.5);
+}
+
+.play-btn svg {
+    width: 32px;
+    height: 32px;
+}
+
+.control-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(139, 69, 255, 0.4);
+}
+
+.play-btn:hover {
+    box-shadow: 0 10px 35px rgba(139, 69, 255, 0.7);
+}
+
+.control-btn:active {
+    transform: translateY(-1px);
+}
+
+/* 音量控制 */
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+
+.volume-icon {
+    width: 24px;
+    height: 24px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.volume-slider {
+    width: 120px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, #8b45ff, #ff006e);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(139, 69, 255, 0.6);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, #8b45ff, #ff006e);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 10px rgba(139, 69, 255, 0.6);
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .player-card {
+        padding: 30px 20px;
+    }
+
+    .album-cover {
+        width: 200px;
+        height: 200px;
+    }
+
+    .song-title {
+        font-size: 24px;
+    }
+
+    .lyric-line {
+        font-size: 16px;
+    }
+
+    .lyric-line.active {
+        font-size: 20px;
+    }
+
+    .control-btn {
+        width: 45px;
+        height: 45px;
+    }
+
+    .play-btn {
+        width: 60px;
+        height: 60px;
+    }
+
+    .controls {
+        gap: 10px;
+    }
+}
